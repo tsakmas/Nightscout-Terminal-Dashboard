@@ -44,6 +44,7 @@ B. Setup Steps
     Bash
 
 git clone https://github.com/tsakmas/Nightscout-Terminal-Dashboard.git
+
 cd nightscout-terminal-dashboard
 
 Compile the C Helper (Crucial for time accuracy on macOS):
@@ -54,13 +55,12 @@ gcc -o get_millis get_millis.c
 Note: This must be done once after cloning.
 
 Configure Parameters: Open the primary script file (nightscout.sh) using your preferred editor (e.g., nano nightscout.sh) and replace the placeholder values for your Nightscout URL and Read-Only Token:
-Bash
 
 NIGHTSCOUT_URL="https://your-nightscout-site.eu"
+
 TOKEN="YOUR_READ_ONLY_TOKEN"
 
 Execute the Dashboard:
-Bash
 
     ./nightscout-dashboard.sh
 
