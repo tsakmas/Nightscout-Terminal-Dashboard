@@ -43,7 +43,7 @@ B. Setup Steps
     Clone the Repository:
     Bash
 
-git clone [Insert your Repository URL here]
+git clone https://github.com/tsakmas/Nightscout-Terminal-Dashboard.git
 cd nightscout-terminal-dashboard
 
 Compile the C Helper (Crucial for time accuracy on macOS):
