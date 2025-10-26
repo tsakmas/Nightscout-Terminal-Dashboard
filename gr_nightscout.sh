@@ -46,7 +46,7 @@ get_trend_arrow() {
         "FortyFiveDown") echo "↘️" ;;
         "SingleDown") echo "⬇️" ;;
         "DoubleDown") echo "⬇️⬇️" ;;
-        "TripleDown") echo "⤵️" ;;
+        "TripleDown") echo "⬇️⬇️⬇️" ;;
         "NOT COMPUTABLE" | "NONE" | "null") echo "⚫" ;;
         *) echo "?" ;;
     esac
