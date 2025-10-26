@@ -2,7 +2,7 @@
 
 # --- ΡΥΘΜΙΣΕΙΣ ---
 NIGHTSCOUT_URL="ΕΔΩ ΠΡΟΣΘΕΣΕ ΤΟ URL ΤΟΥ NIGHTSCOUT"
-TOKEN="ΕΔΩ ΠΡΟΣΘΕΣΗ ΤΟ TOKEN ΠΟΥ ΔΗΜΙΟΥΡΓΗΣΕΣ"
+TOKEN="ΕΔΩ ΠΡΟΣΘΕΣΕ ΤΟ TOKEN ΠΟΥ ΔΗΜΙΟΥΡΓΗΣΕΣ"
 API_ENDPOINT="/api/v1/entries.json?count=10&token=${TOKEN}" # Ανάκτηση περισσότερων για το ιστορικό
 SLEEP_INTERVAL=30  # Έλεγχος κάθε 30 δευτερόλεπτ
 # ---------------------
