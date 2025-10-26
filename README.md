@@ -39,18 +39,17 @@ Ensure you have the following tools installed on your system:
 (On macOS, you can install the dependencies easily via Homebrew: brew install jq)
 
 B. Setup Steps
-
     Clone the Repository:
     Bash
+    
+    git clone https://github.com/tsakmas/Nightscout-Terminal-Dashboard.git
+    cd nightscout-terminal-dashboard
 
-git clone https://github.com/tsakmas/Nightscout-Terminal-Dashboard.git
-
-cd nightscout-terminal-dashboard
 
 Compile the C Helper (Crucial for time accuracy on macOS):
 Bash
 
-gcc -o get_millis get_millis.c
+    gcc -o get_millis get_millis.c
 
 Note: This must be done once after cloning.
 
@@ -64,7 +63,7 @@ Execute the Dashboard:
 
     ./nightscout-dashboard.sh
 
-    Press Ctrl+C to terminate the program.
+Press Ctrl+C to terminate the program.
 
 License
 
