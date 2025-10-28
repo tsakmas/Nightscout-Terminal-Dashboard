@@ -9,78 +9,70 @@ set -euo pipefail
 # Default language
 DEFAULT_LANG="en"
 
-# Function to print prompt and read language
+# Function to print prompt to stderr and read language
 choose_language() {
-  echo "Select language / Επιλέξτε γλώσσα:"
-  echo "  [en] English"
-  echo "  [gr] Ελληνικά"
-  read -r -p "Enter choice (en/gr) [${DEFAULT_LANG}]: " choice
-  choice=${choice:-$DEFAULT_LANG}
-  # Normalize to lowercase
-  choice=$(printf "%s" "$choice" | tr '[:upper:]' '[:lower:]')
-  case "$choice" in
-    en|gr)
-      echo "$choice"
-      ;;
-    *)
-      echo "Invalid choice. Defaulting to ${DEFAULT_LANG}." >&2
-      echo "$DEFAULT_LANG"
-      ;;
-  esac
+    # Send all informational prompts to standard error (>&2)
+    echo "Select language / Επιλέξτε γλώσσα:" >&2
+    echo "  [en] English" >&2
+    echo "  [gr] Ελληνικά" >&2
+    read -r -p "Enter choice (en/gr) [${DEFAULT_LANG}]: " choice
+    choice=${choice:-$DEFAULT_LANG}
+    # Normalize: strip CR, trim spaces, lowercase
+    choice=$(printf '%s' "$choice" | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')
+    case "$choice" in
+        en|gr)
+            # ONLY the final choice is printed to standard output (stdout)
+            echo "$choice"
+            ;;
+        *)
+            echo "Invalid choice. Defaulting to ${DEFAULT_LANG}." >&2
+            echo "$DEFAULT_LANG"
+            ;;
+    esac
 }
 
 LANG_CODE=$(choose_language)
 export LANG_CODE
 
 # If callers prefer a different env var name, we also export a generic LANG-like var
-# but do not override system LANG if already set.
 if [ -z "${NS_LANG:-}" ]; then
-  export NS_LANG="$LANG_CODE"
+    export NS_LANG="$LANG_CODE"
 fi
 
-# Determine which underlying script to call. Prefer nightscout.sh if present.
-SCRIPT_CANDIDATES=(
-  "./nightscout.sh"
-  "./Nightscout.sh"
-)
-
-TARGET_SCRIPT=""
-for s in "${SCRIPT_CANDIDATES[@]}"; do
-  if [ -f "$s" ] && [ -x "$s" ]; then
-    TARGET_SCRIPT="$s"
-    break
-  elif [ -f "$s" ]; then
-    # Make it executable for this run
-    chmod +x "$s" || true
-    TARGET_SCRIPT="$s"
-    break
-  fi
-done
-
-if [ -z "$TARGET_SCRIPT" ]; then
-  # Fallback: if there is a README instruction referencing a different script name,
-  # we try the commonly referenced one in the README: nightscout-dashboard.sh
-  # But to avoid recursion, ensure we don't call ourselves.
-  if [ -f "./nightscout.sh" ]; then
-    chmod +x ./nightscout.sh || true
-    TARGET_SCRIPT="./nightscout.sh"
-  fi
+# Determine which underlying script to call and set standard locale variables
+if [ "$LANG_CODE" = "gr" ]; then
+    TARGET_SCRIPT="./gr_nightscout.sh"
+    # Set standard Greek locale for underlying programs
+    export LANG="el_GR.UTF-8"
+    export LC_ALL="el_GR.UTF-8"
+else
+    TARGET_SCRIPT="./en_nightscout.sh"
+    # Set standard English locale
+    export LANG="en_US.UTF-8"
+    export LC_ALL="en_US.UTF-8"
 fi
 
-if [ -z "$TARGET_SCRIPT" ]; then
-  echo "Error: Could not find the main Nightscout script (expected ./nightscout.sh)." >&2
-  echo "Please ensure the main script exists in this directory." >&2
-  exit 1
+# Ensure the target script exists
+if [ ! -f "$TARGET_SCRIPT" ]; then
+    echo "Error: Could not find $TARGET_SCRIPT." >&2
+    echo "Please ensure the language-specific script exists in this directory." >&2
+    exit 1
+fi
+
+# Ensure it's executable
+if [ ! -x "$TARGET_SCRIPT" ]; then
+    chmod +x "$TARGET_SCRIPT" || true
 fi
 
 # Inform the user which language was selected
 if [ "$LANG_CODE" = "gr" ]; then
-  echo "Επιλέχθηκε γλώσσα: Ελληνικά"
+    echo "Επιλέχθηκε γλώσσα: Ελληνικά"
 else
-  echo "Language selected: English"
+    echo "Language selected: English"
 fi
+sleep 3
 
-# Delegate to the main script. Pass through all arguments.
+echo "Launching: $TARGET_SCRIPT"
+sleep 1
+
 exec "$TARGET_SCRIPT" "$@"
-
-# End of file
