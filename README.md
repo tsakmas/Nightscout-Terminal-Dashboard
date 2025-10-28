@@ -65,6 +65,6 @@ Execute the Dashboard:
 
 Press Ctrl+C to terminate the program.
 
-License
 
+License
 This project is licensed under the MIT License.
