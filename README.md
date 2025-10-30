@@ -1,5 +1,5 @@
 🚀 Nightscout Terminal Dashboard
-
+![Nightscout Dashboard in Terminal](./screenshot.png)
 Backstory
 
 Two years ago, my daughter was diagnosed with Type 1 Diabetes. From day one, I began searching for a way to monitor her blood glucose levels directly from my MacBook's terminal. I couldn't find a tool that truly fit my need for a quick, minimal, and constantly visible status, so I decided to create this project.
