@@ -1,4 +1,5 @@
 🚀 Nightscout Terminal Dashboard
+
 ![Nightscout Dashboard in Terminal](./screenshot.png)
 Backstory
 
