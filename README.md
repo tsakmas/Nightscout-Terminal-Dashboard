@@ -1,72 +1,88 @@
-🚀 Nightscout Terminal Dashboard
+# 🚀 Nightscout Terminal Dashboard
 
 ![Nightscout Dashboard in Terminal](./screenshot.png)
-Backstory
+
+## Backstory
 
 Two years ago, my daughter was diagnosed with Type 1 Diabetes. From day one, I began searching for a way to monitor her blood glucose levels directly from my MacBook's terminal. I couldn't find a tool that truly fit my need for a quick, minimal, and constantly visible status, so I decided to create this project.
 
 This dashboard is a lightweight, always-on utility designed to provide immediate peace of mind by showing the most critical Nightscout data right in the command line. Any suggestion for improvement is highly welcomed!
 
-Short Description
+## What it does
 
-The Nightscout Terminal Dashboard is a fast, command-line interface (CLI) tool designed for macOS and Linux users. It displays the current blood glucose (BG) value, trend, and recent history from your Nightscout site in real-time, right inside your Terminal. It's perfect for developers and anyone who frequently uses the command line and desires an immediate, minimal visual update without needing to open a web browser.
+A small command-line tool for macOS and Linux that shows live blood glucose from your Nightscout site in the terminal, the menu bar, or tmux.
 
-Features
+- **Big, color-coded number** you can read from across the room, with the trend arrow and the change over the last 5 minutes.
+- **Five levels:** urgent low, low, in range, high and urgent high, each with its own color.
+- **Stale data warning:** if the newest reading is older than 15 minutes, the number turns grey and a red "NO RECENT DATA" banner appears.
+- **Desktop alerts with sound** (macOS notifications, `notify-send` on Linux) for lows, highs, falling fast and stale data. An ongoing alert repeats every 15 minutes. Press `m` to mute.
+- **Graph of the last 3 hours** with the target range marked.
+- **Time in range for the last 24 hours**, plus % low, % high, average glucose and GMI.
+- **IOB / COB** (insulin and carbs on board) if your site has them (Loop, AAPS, OpenAPS).
+- **mg/dL or mmol/L**, switch at any time with `u`.
+- **English and Greek** (`--lang gr`).
+- **Menu bar mode** for [SwiftBar](https://swiftbar.app) and a **one-line mode** for tmux or your shell prompt.
+- Smooth redraw (no flicker), adapts to the window size, and the clock and "minutes ago" update every second.
 
-    Real-Time Data: Configurable refresh interval (default is 30 seconds).
+## Installation
 
-    Vertical Centering: Status information is centered vertically and horizontally for easy viewing.
+You need `curl` and `jq`. On macOS:
 
-    Color-Coded Status: BG values are color-coded based on target ranges (Red, Yellow, Green).
+```bash
+brew install jq
+```
 
-    Universal Compatibility: Uses a small C helper (get_millis) to ensure accurate millisecond-level time calculation on both macOS (BSD) and Linux (GNU) systems, preventing time-related script errors.
+Then:
 
-    Data Integrity Checks: Robust checks handle "null" and invalid data responses from the API to prevent terminal errors.
+```bash
+git clone https://github.com/tsakmas/Nightscout-Terminal-Dashboard.git
+cd Nightscout-Terminal-Dashboard
+cp nightscout.conf.example nightscout.conf
+nano nightscout.conf        # fill in NIGHTSCOUT_URL and TOKEN
+./nightscout.sh
+```
 
-🛠️ Installation and Execution
+Use a **read-only** token (Nightscout → Admin Tools → Subjects, role `readable`).
+`nightscout.conf` is in `.gitignore`, so your token is never committed. You can also keep the file at `~/.config/nightscout-dash.conf`, or use the environment variables `NS_URL` and `NS_TOKEN`.
 
-A. Prerequisites
+## Usage
 
-Ensure you have the following tools installed on your system:
+```bash
+./nightscout.sh                       # full-screen dashboard
+./nightscout.sh --lang gr --units mmol
+./nightscout.sh --line                # one line, e.g. "142 ↗ +4"
+./nightscout.sh --help                # all options
+```
 
-    Git
+Keys in the dashboard: `q` quit · `r` refresh now · `u` switch units · `m` mute alerts
 
-    Curl
+### Menu bar (macOS)
 
-    jq (JSON processor)
+1. Install SwiftBar: `brew install --cask swiftbar`
+2. Copy `swiftbar/nightscout.30s.sh` into your SwiftBar plugin folder.
+3. If you cloned the project somewhere other than `~/Nightscout-Terminal-Dashboard`, change `NS_DIR` at the top of that file.
 
-    C Compiler (gcc or clang—usually available via XCode Command Line Tools on macOS).
+The menu bar shows `142 ↗ +4` in green, orange or red, and alerts also work from there.
 
-(On macOS, you can install the dependencies easily via Homebrew: brew install jq)
+### tmux status bar
 
-B. Setup Steps
-    Clone the Repository:
-    Bash
-    
-    git clone https://github.com/tsakmas/Nightscout-Terminal-Dashboard.git
-    cd nightscout-terminal-dashboard
+```tmux
+set -g status-right '#(~/Nightscout-Terminal-Dashboard/nightscout.sh --line)'
+set -g status-interval 30
+```
 
+## Settings
 
-Compile the C Helper (Crucial for time accuracy on macOS):
-Bash
+All settings are in `nightscout.conf` (see `nightscout.conf.example`): language, units, refresh interval, stale time, the four thresholds (always in mg/dL), alerts and alert repeat time.
 
-    gcc -o get_millis get_millis.c
+## Previous version
 
-Note: This must be done once after cloning.
+The original version (with `gr_nightscout.sh`, `en_nightscout.sh` and the `get_millis` C helper) is kept under the git tag `v1`:
 
-Configure Parameters: Open the primary script file (nightscout.sh) using your preferred editor (e.g., nano nightscout.sh) and replace the placeholder values for your Nightscout URL and Read-Only Token:
+```bash
+git checkout v1
+```
 
-NIGHTSCOUT_URL="https://your-nightscout-site.eu"
-
-TOKEN="YOUR_READ_ONLY_TOKEN"
-
-Execute the Dashboard:
-
-    ./nightscout-dashboard.sh
-
-Press Ctrl+C to terminate the program.
-
-
-License
+## License
 
 This project is licensed under the MIT License.
