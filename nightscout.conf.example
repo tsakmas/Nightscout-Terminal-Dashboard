@@ -1,0 +1,23 @@
+# Nightscout Terminal Dashboard settings
+# Copy this file to "nightscout.conf" (next to nightscout.sh)
+# or to ~/.config/nightscout-dash.conf, then fill it in.
+# nightscout.conf is in .gitignore, so your token is never committed.
+
+NIGHTSCOUT_URL="https://your-site.example.com"
+TOKEN="your-read-only-token"
+
+LANG_CODE="en"        # en | gr
+UNITS="mgdl"          # mgdl | mmol
+
+INTERVAL=30           # seconds between downloads
+STALE_MIN=15          # warn when the newest reading is older than this (minutes)
+
+# Thresholds, always in mg/dL (even if UNITS="mmol")
+URGENT_LOW=55
+LOW=70
+HIGH=180
+URGENT_HIGH=250
+
+ALERTS=1              # 1 = desktop notification + sound, 0 = off
+ALERT_REPEAT_MIN=15   # repeat an ongoing alert every N minutes
+SHOW_URL=0            # 1 = show the site address in the header
